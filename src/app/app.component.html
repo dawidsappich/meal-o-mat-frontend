@@ -1,9 +1,13 @@
 <mat-sidenav-container>
-  <mat-sidenav>
-    <app-sidebar></app-sidebar>
+  <!--SIDEBAR CONTENT-->
+  <mat-sidenav #sidenav role="navigation">
+    <app-sidebar (closeSidebar)="sidenav.toggle()"></app-sidebar>
   </mat-sidenav>
-  <mat-sidenav-content>
-    <app-header></app-header>
+
+
+  <!--MAIN CONTENT-->
+  <mat-sidenav-content role="main">
+    <app-header (sideNavToggle)="sidenav.toggle()"></app-header>
     <main>
       <router-outlet></router-outlet>
     </main>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 
 @Component({
   selector: 'app-sidebar',
@@ -7,9 +7,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SidebarComponent implements OnInit {
 
-  constructor() { }
+  @Output() closeSidebar = new EventEmitter<void>();
+
+  constructor() {
+  }
 
   ngOnInit() {
   }
 
+  onNavigate() {
+    this.closeSidebar.emit();
+  }
+
+  onLogout() {
+    // TODO: logout vis userservice
+    this.closeSidebar.emit();
+  }
 }

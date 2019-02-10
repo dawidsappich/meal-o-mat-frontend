@@ -9,13 +9,17 @@ import {AppRoutingModule} from './app-routing/app-routing.module';
 import {HeaderComponent} from './navigation/header/header.component';
 import {SidebarComponent} from './navigation/sidebar/sidebar.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
+import {AdminComponent} from './admin/admin.component';
+import { RegisterComponent } from './register/register.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     HeaderComponent,
-    SidebarComponent
+    SidebarComponent,
+    AdminComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
