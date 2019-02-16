@@ -11,6 +11,7 @@ import {SidebarComponent} from './navigation/sidebar/sidebar.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {AdminComponent} from './admin/admin.component';
 import { RegisterComponent } from './register/register.component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { RegisterComponent } from './register/register.component';
     BrowserAnimationsModule,
     MyMaterialModule,
     AppRoutingModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    ReactiveFormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

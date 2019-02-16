@@ -1,17 +1,21 @@
 <section class="login-form" fxLayout="row" fxLayoutAlign="center">
-  <form>
+  <form [formGroup]="loginForm">
     <mat-card fxFlex="400px">
       <mat-card-title fxLayoutAlign="center">Enter your credentials</mat-card-title>
       <mat-card-content fxLayout="column" fxLayoutAlign="center">
         <mat-form-field>
-          <input matInput placeholder="Email" type="email" required>
+          <input formControlName="email" matInput placeholder="Email" type="email">
+          <mat-error *ngIf="loginForm.get('email').hasError('required')">Field must not be empty</mat-error>
+          <mat-error *ngIf="!loginForm.get('email').hasError('required')">Email is invalid</mat-error>
         </mat-form-field>
-        <mat-form-field>
-          <input matInput placeholder="Password" type="password" required>
+        <mat-form-field hintLabel="Should at least be 6 characters long">
+          <input formControlName="password" matInput placeholder="Password" type="password">
+          <mat-hint align="end"> {{ loginForm.get('password').value.length }} / {{ minLength }}</mat-hint>
+          <mat-error *ngIf="loginForm.get('password').value.length < minLength">Password must be at least {{ minLength }} characters</mat-error>
         </mat-form-field>
       </mat-card-content>
       <mat-card-actions fxLayoutAlign="center">
-        <button mat-raised-button color="primary">Login</button>
+        <button (click)="onLogin()" mat-raised-button color="primary">Login</button>
       </mat-card-actions>
       <mat-card-footer fxLayoutAlign="center">
         <a class="register-link" routerLink="/register">Create an account instead?</a>
