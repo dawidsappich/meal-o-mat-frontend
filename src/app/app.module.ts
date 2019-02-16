@@ -10,8 +10,11 @@ import {HeaderComponent} from './navigation/header/header.component';
 import {SidebarComponent} from './navigation/sidebar/sidebar.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {AdminComponent} from './admin/admin.component';
-import { RegisterComponent } from './register/register.component';
+import {RegisterComponent} from './register/register.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {AuthInterceptor} from './shared/auth.interceptor';
+import {AuthService} from './auth/auth.service';
 
 @NgModule({
   declarations: [
@@ -29,8 +32,12 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
     AppRoutingModule,
     FlexLayoutModule,
     ReactiveFormsModule,
+    HttpClientModule
   ],
-  providers: [],
+  providers: [
+    AuthService
+    // {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
