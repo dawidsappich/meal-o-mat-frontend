@@ -5,9 +5,12 @@
         <mat-radio-button [disabled]="isVoteDisabled" (change)="onSelect($event)" value="{{ meal.id }}"></mat-radio-button>
         <mat-icon matListIcon>fastfood</mat-icon>
         <h3 matLine>{{ meal.displayName }}</h3>
-        <p matLine>{{ meal.location.city }}</p>
+        <p matLine>{{ meal.storeLocation.city }}</p>
       </mat-list-item>
     </mat-radio-group>
   </mat-list>
-  <button [disabled]="isVoteDisabled" class="btn-vote" mat-raised-button color="primary" (click)="onVote()">Vote</button>
+  <div fxLayout fxLayoutGap="20px">
+    <button [disabled]="isVoteDisabled" class="btn-vote" mat-raised-button color="primary" (click)="onVote()">Vote</button>
+    <button [disabled]="!isVoteDisabled" class="btn-vote" mat-raised-button color="primary" (click)="onRevoke()">Revoke</button>
+  </div>
 </section>

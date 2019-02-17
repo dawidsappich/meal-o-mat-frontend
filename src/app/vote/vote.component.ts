@@ -1,55 +1,55 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Meal} from '../model/meal.model';
 import {MatRadioChange} from '@angular/material/typings/radio';
+import {VoteService} from '../shared/vote.service';
+import {Subscription} from 'rxjs';
+import {MatSnackBar} from '@angular/material';
+import {MealService} from '../shared/meal.service';
 
 @Component({
   selector: 'app-vote',
   templateUrl: './vote.component.html',
   styleUrls: ['./vote.component.css']
 })
-export class VoteComponent implements OnInit {
+export class VoteComponent implements OnInit, OnDestroy {
 
-  mealChoiceId: number;
-
-  @ViewChild('btn') button: ElementRef;
-
-  meals: Meal[] = [];
   private isVoteDisabled = false;
 
-  constructor() {
+  private mealChoiceId: number;
+
+  meals: Meal[] = [];
+
+  private responseMessage: string;
+  private voteSubscription: Subscription;
+
+  constructor(private voteService: VoteService, private snackBar: MatSnackBar, private mealService: MealService) {
   }
 
   ngOnInit() {
-    this.meals.push(
-      {
-        id: 1,
-        name: 'hit_asia',
-        displayName: 'Hit Asiate',
-        location: {
-          city: 'Köln',
-          houseNr: '484',
-          street: 'Bonner Str.'
-        }
-      },
-      {
-        id: 2,
-        name: 'italia',
-        displayName: 'Italiener',
-        location: {
-          city: 'Köln',
-          houseNr: '484',
-          street: 'Bonner Str.'
-        }
-      }
-    );
+    this.mealService.getAllMeals().subscribe(response => this.meals = response);
   }
 
   onVote() {
+    this.voteService.voteForMealWithId(this.mealChoiceId);
+    this.voteSubscription = this.voteService.getHasVoted()
+      .subscribe(hasVoted => {
+        this.isVoteDisabled = hasVoted;
+        this.responseMessage = this.voteService.getApplicationResponse().message;
+        this.snackBar.open(this.responseMessage, 'Dismiss');
+      });
     this.isVoteDisabled = true;
-    // TODO Sent vote to backend via service
+  }
+
+  onRevoke() {
+    this.voteService.revokeVote();
+    this.isVoteDisabled = false;
   }
 
   onSelect(event: MatRadioChange) {
     this.mealChoiceId = event.value;
+  }
+
+  ngOnDestroy(): void {
+    this.voteSubscription.unsubscribe();
   }
 }

@@ -2,7 +2,8 @@ export interface Meal {
   id?: number;
   name: string;
   displayName: string;
-  location?: {
+  storeLocation?: {
+    storeId?: number;
     latitude?: number;
     longitude?: number;
     city: string;

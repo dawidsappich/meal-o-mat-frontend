@@ -35,7 +35,7 @@ export class LoginComponent implements OnInit {
             this.snackBar.open('Successfully logged in', 'Dismiss', {duration: 3000});
             this.router.navigate(['vote']);
           } else {
-            this.snackBar.open(`Authentication failed`, 'Dismiss', {duration: 3000});
+            this.snackBar.open(`Authentication failed`, 'Dismiss');
           }
         });
   }
