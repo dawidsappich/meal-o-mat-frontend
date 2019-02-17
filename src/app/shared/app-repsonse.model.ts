@@ -1,6 +1,6 @@
-export interface ApplicationResponse {
+export class ApplicationResponse {
   isSuccess: boolean;
-  code: string;
+  code: number;
   message: string;
   date: Date;
 }

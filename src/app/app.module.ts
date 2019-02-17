@@ -15,6 +15,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {AuthInterceptor} from './shared/auth.interceptor';
 import {AuthService} from './auth/auth.service';
+import {VoteComponent} from './vote/vote.component';
+import {HttpErrorInterceptor} from './shared/error.interceptor';
 
 @NgModule({
   declarations: [
@@ -23,7 +25,8 @@ import {AuthService} from './auth/auth.service';
     HeaderComponent,
     SidebarComponent,
     AdminComponent,
-    RegisterComponent
+    RegisterComponent,
+    VoteComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +38,8 @@ import {AuthService} from './auth/auth.service';
     HttpClientModule
   ],
   providers: [
-    AuthService
+    AuthService,
+    {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true}
     // {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
