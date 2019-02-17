@@ -1,53 +1,44 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ApplicationResponse} from '../model/app-repsonse.model';
-import {Subject} from 'rxjs';
+import {UiService} from '../shared/ui.service';
+import {environment} from '../../environments/environment';
+import {Subject, Subscription} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
-  private isRegistered: Subject<boolean>;
-
-  private isAuthenticated: Subject<boolean>;
-
+export class AuthService implements OnDestroy {
   private basicAuthToken: string;
+  private $authenticate: Subscription;
 
-  private applicationResponse: ApplicationResponse;
+  isAuthenticated: Subject<boolean> = new Subject();
+  isRegistered: Subject<boolean> = new Subject();
 
-  private API_URL = `http://localhost:8080/api/v1/`;
-
-  constructor(private httpClient: HttpClient) {
-    this.isRegistered = new Subject<boolean>();
-    this.isAuthenticated = new Subject<boolean>();
+  constructor(private httpClient: HttpClient, private uiService: UiService) {
   }
 
   authenticate(email: string, password: string) {
+    // encode username and password in base64 string
     const encodedCredentials = btoa(`${email}:${password}`);
+    // save token
     this.basicAuthToken = `Basic ${encodedCredentials}`;
-
-    this.httpClient.get<ApplicationResponse>(`${this.API_URL}login`, {
+    // authenticate user with http basic auth
+    this.$authenticate = this.httpClient.get<ApplicationResponse>(`${environment.API_URL}login`, {
       headers: new HttpHeaders().set('Authorization', this.basicAuthToken)
     })
       .subscribe(response => {
-        if (response.isSuccess) {
-          this.isAuthenticated.next(true);
-        } else {
-          this.isAuthenticated.next(false);
-        }
+        this.isAuthenticated.next(response.isSuccess);
+        this.uiService.createSnackBar(response.message, 'Dismiss', 2000);
+      }, (error: ApplicationResponse) => {
+        console.log(error.message)
+        this.isAuthenticated.next(false);
+        this.uiService.createSnackBar('Authentication failed!', 'Dismiss', 2000);
       });
   }
 
   getBasicAuthToken() {
     return this.basicAuthToken;
-  }
-
-  getIsAuthenticated(): Subject<boolean> {
-    return this.isAuthenticated;
-  }
-
-  getIsRegistered(): Subject<boolean> {
-    return this.isRegistered;
   }
 
   logout() {
@@ -57,26 +48,19 @@ export class AuthService {
 
   register(email: string, password: string) {
     const credentials = {email, password};
-    this.httpClient.post<ApplicationResponse>(`${this.API_URL}register`, credentials)
+    this.httpClient.post<ApplicationResponse>(`${environment.API_URL}register`, credentials)
       .subscribe(response => {
-          this.applicationResponse = response;
-          if (response.isSuccess) {
-            this.isRegistered.next(true);
-          } else {
-            this.isRegistered.next(false);
-          }
+          this.isRegistered.next(response.isSuccess);
+          this.uiService.createSnackBar(response.message, 'Dismiss', 2000);
         }, (error: ApplicationResponse) => {
-          this.applicationResponse = error;
           this.isRegistered.next(false);
+          this.uiService.createSnackBar(error.message, 'Dismiss', 2000);
         }
       );
   }
 
-  getAuthenticationResponse() {
-    return this.applicationResponse;
+  ngOnDestroy(): void {
+    this.$authenticate ? this.$authenticate.unsubscribe() : this.$authenticate = null;
   }
 
-  getApiUrl() {
-    return this.API_URL;
-  }
 }

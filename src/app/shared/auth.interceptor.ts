@@ -2,6 +2,7 @@ import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/com
 import {Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 import {AuthService} from '../auth/auth.service';
+import {environment} from '../../environments/environment';
 
 /**
  * interceptor for requests to set the Authorisation header
@@ -15,7 +16,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const url = req.url;
-    const loginUrl = `${this.authService.getApiUrl()}login`;
+    const loginUrl = `${environment.API_URL}login`;
     // by default the req is immutable, so we have to work with a clone and update the header
     const httpRequest = req.clone({headers: req.headers.set('Authorisation', this.authService.getBasicAuthToken())});
     /**

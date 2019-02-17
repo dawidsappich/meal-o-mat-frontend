@@ -1,20 +1,22 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../auth/auth.service';
 import {Router} from '@angular/router';
-import {MatSnackBar} from '@angular/material';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
+
+  private $registered: Subscription;
 
   registerFrom: FormGroup;
   minLength = 6;
 
-  constructor(private authService: AuthService, private router: Router, private snackBar: MatSnackBar) {
+  constructor(private authService: AuthService, private router: Router) {
   }
 
   ngOnInit() {
@@ -29,15 +31,14 @@ export class RegisterComponent implements OnInit {
     const email = this.registerFrom.get('email').value;
     const password = this.registerFrom.get('password').value;
     this.authService.register(email, password);
-    this.authService.getIsRegistered()
-      .subscribe(isRegistered => {
-        if (isRegistered) {
-          this.snackBar.open('Successfully registered', 'Dismiss', {duration: 3000});
-          setTimeout(() => this.router.navigate(['login']), 1500);
-        } else {
-          const response = this.authService.getAuthenticationResponse();
-          this.snackBar.open(response.message, 'Dismiss', {duration: 3000});
-        }
-      });
+    this.$registered = this.authService.isRegistered.subscribe(isRegisterd => {
+      if (isRegisterd) {
+        this.router.navigate(['/login']);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.$registered ? this.$registered.unsubscribe() : this.$registered = null;
   }
 }

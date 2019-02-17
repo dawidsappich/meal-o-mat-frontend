@@ -1,20 +1,21 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../auth/auth.service';
 import {Router} from '@angular/router';
-import {MatSnackBar} from '@angular/material';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
 
+  private $authenticated: Subscription;
   loginForm: FormGroup;
   minLength: number;
 
-  constructor(private authService: AuthService, private router: Router, private snackBar: MatSnackBar) {
+  constructor(private authService: AuthService, private router: Router) {
   }
 
   ngOnInit() {
@@ -29,14 +30,14 @@ export class LoginComponent implements OnInit {
     const email = this.loginForm.get('email').value;
     const password = this.loginForm.get('password').value;
     this.authService.authenticate(email, password);
-    this.authService.getIsAuthenticated()
-      .subscribe(isAuthenticated => {
-        if (isAuthenticated) {
-            this.snackBar.open('Successfully logged in', 'Dismiss', {duration: 3000});
-            this.router.navigate(['vote']);
-          } else {
-            this.snackBar.open(`Authentication failed`, 'Dismiss');
-          }
-        });
+    this.$authenticated = this.authService.isAuthenticated.subscribe(isAuthenticated => {
+      if (isAuthenticated) {
+        this.router.navigate(['/vote']);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.$authenticated ? this.$authenticated.unsubscribe() : this.$authenticated = null;
   }
 }
