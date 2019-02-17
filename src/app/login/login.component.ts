@@ -3,7 +3,6 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../auth/auth.service';
 import {Router} from '@angular/router';
 import {MatSnackBar} from '@angular/material';
-import {ApplicationResponse} from '../shared/app-repsonse.model';
 
 @Component({
   selector: 'app-login',
@@ -13,12 +12,13 @@ import {ApplicationResponse} from '../shared/app-repsonse.model';
 export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
-  minLength = 6;
+  minLength: number;
 
   constructor(private authService: AuthService, private router: Router, private snackBar: MatSnackBar) {
   }
 
   ngOnInit() {
+    this.minLength = 6;
     this.loginForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required, Validators.minLength(this.minLength)])
@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
     this.authService.authenticate(email, password);
     this.authService.getIsAuthenticated()
       .subscribe(isAuthenticated => {
-          if (isAuthenticated) {
+        if (isAuthenticated) {
             this.snackBar.open('Successfully logged in', 'Dismiss', {duration: 3000});
             this.router.navigate(['vote']);
           } else {

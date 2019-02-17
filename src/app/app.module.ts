@@ -39,7 +39,7 @@ import {HttpErrorInterceptor} from './shared/error.interceptor';
   ],
   providers: [
     AuthService,
-    {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true}
+    {provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true},
     // {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]

@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Meal} from '../model/meal.model';
+import {MatRadioChange} from '@angular/material/typings/radio';
 
 @Component({
   selector: 'app-vote',
@@ -7,9 +9,47 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VoteComponent implements OnInit {
 
-  constructor() { }
+  mealChoiceId: number;
 
-  ngOnInit() {
+  @ViewChild('btn') button: ElementRef;
+
+  meals: Meal[] = [];
+  private isVoteDisabled = false;
+
+  constructor() {
   }
 
+  ngOnInit() {
+    this.meals.push(
+      {
+        id: 1,
+        name: 'hit_asia',
+        displayName: 'Hit Asiate',
+        location: {
+          city: 'Köln',
+          houseNr: '484',
+          street: 'Bonner Str.'
+        }
+      },
+      {
+        id: 2,
+        name: 'italia',
+        displayName: 'Italiener',
+        location: {
+          city: 'Köln',
+          houseNr: '484',
+          street: 'Bonner Str.'
+        }
+      }
+    );
+  }
+
+  onVote() {
+    this.isVoteDisabled = true;
+    // TODO Sent vote to backend via service
+  }
+
+  onSelect(event: MatRadioChange) {
+    this.mealChoiceId = event.value;
+  }
 }

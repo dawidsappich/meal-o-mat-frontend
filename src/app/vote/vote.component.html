@@ -1,3 +1,13 @@
-<p>
-  vote works!
-</p>
+<section fxLayout="column" fxLayoutAlign="center center">
+  <mat-list>
+    <mat-radio-group>
+      <mat-list-item *ngFor="let meal of meals">
+        <mat-radio-button [disabled]="isVoteDisabled" (change)="onSelect($event)" value="{{ meal.id }}"></mat-radio-button>
+        <mat-icon matListIcon>fastfood</mat-icon>
+        <h3 matLine>{{ meal.displayName }}</h3>
+        <p matLine>{{ meal.location.city }}</p>
+      </mat-list-item>
+    </mat-radio-group>
+  </mat-list>
+  <button [disabled]="isVoteDisabled" class="btn-vote" mat-raised-button color="primary" (click)="onVote()">Vote</button>
+</section>

@@ -4,7 +4,7 @@ import {
   MatCardModule,
   MatIconModule,
   MatInputModule,
-  MatListModule,
+  MatListModule, MatRadioModule,
   MatSidenavModule, MatSnackBarModule,
   MatToolbarModule
 } from '@angular/material';
@@ -13,11 +13,11 @@ import {
   declarations: [],
   imports: [
     MatInputModule, MatSidenavModule, MatIconModule, MatToolbarModule,
-    MatButtonModule, MatListModule, MatCardModule, MatSnackBarModule
+    MatButtonModule, MatListModule, MatCardModule, MatSnackBarModule, MatRadioModule
   ],
   exports: [
     MatInputModule, MatSidenavModule, MatIconModule, MatToolbarModule,
-    MatButtonModule, MatListModule, MatCardModule, MatSnackBarModule
+    MatButtonModule, MatListModule, MatCardModule, MatSnackBarModule, MatRadioModule
   ]
 })
 export class MyMaterialModule {

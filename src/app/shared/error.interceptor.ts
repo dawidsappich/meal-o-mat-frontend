@@ -3,7 +3,7 @@ import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest}
 import {Observable, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {AuthService} from '../auth/auth.service';
-import {ApplicationResponse} from './app-repsonse.model';
+import {ApplicationResponse} from '../model/app-repsonse.model';
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {

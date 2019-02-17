@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {ApplicationResponse} from '../shared/app-repsonse.model';
+import {ApplicationResponse} from '../model/app-repsonse.model';
 import {Subject} from 'rxjs';
 
 @Injectable({
@@ -30,8 +30,7 @@ export class AuthService {
       headers: new HttpHeaders().set('Authorization', this.basicAuthToken)
     })
       .subscribe(response => {
-        if (response.isSuccess && response.message === 'Authenticated: true') {
-          // TODO show info about success
+        if (response.isSuccess) {
           this.isAuthenticated.next(true);
         } else {
           this.isAuthenticated.next(false);
@@ -75,5 +74,9 @@ export class AuthService {
 
   getAuthenticationResponse() {
     return this.applicationResponse;
+  }
+
+  getApiUrl() {
+    return this.API_URL;
   }
 }
